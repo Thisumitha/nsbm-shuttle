@@ -1,8 +1,7 @@
-# Simple workflow to build and deploy a static site to GitHub Pages
-name: Deploy to GitHub Pages
+name: Deploy React App to GitHub Pages
 
 on:
-  # Triggers the workflow on pushes to the `main` branch
+  # Trigger the workflow on pushes to the `main` branch
   push:
     branches: ["main"]
 
@@ -15,10 +14,11 @@ permissions:
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment
+# Allow only one concurrent deployment, skipping runs queued between a run in-progress and latest queued.
+# However, do not cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
   group: "pages"
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   # Build job
@@ -28,19 +28,24 @@ jobs:
       - name: Checkout your repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js (or any other build environment)
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'npm'
 
-      - name: Install dependencies and build
-        run: |
-          npm ci
-          npm run build
-      - name: Upload pages artifact
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './build' # Change 'build' to your project's build output directory
+          # This should be the directory that contains the static files to be deployed.
+          # For a Vite/React app, this is typically the 'dist' folder.
+          path: './dist' 
 
   # Deployment job
   deploy:
