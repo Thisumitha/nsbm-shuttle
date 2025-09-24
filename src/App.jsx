@@ -1,14 +1,12 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
+
 function App() {
   return (
-    <BrowserRouter>
-     
-    
+    <BrowserRouter basename="/nsbm-shuttle">
       <Routes>
         <Route path="/" element={<Dashboard />} />
-
       </Routes>
     </BrowserRouter>
   );
